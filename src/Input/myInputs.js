@@ -1,45 +1,25 @@
-import { useEffect, useState } from "react";
 import Input from "./input";
 import inputCss from "./inputCss.module.css";
 import { useValidateForm } from "../hooks/useValidateForm";
 
-export default function MyInputs({ setIsDone }) {
-  const [user, setUser] = useState({
+export default function MyInputs() {
+  const user = {
     firstName: "",
     lastName: "",
     email: "",
     phoneNum: "",
     message: "",
     passWord: "",
-  });
-
-  const [error, setError] = useState({});
-  const [isSubmit, setIsSubmit] = useState(false);
-
-  const validateForm = useValidateForm(user);
-
-  const handleFormChange = (e) => {
-    setUser({
-      ...user,
-      [e.target.name]: e.target.value
-    });
   };
-
+   
+  const { error, validateOnSubmit, handleFormChange, formData,done,data } =
+    useValidateForm(user);
+  
+  
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    setError(validateForm);
-    setIsSubmit(true);
-    if (Object.keys(error).length === 0 && isSubmit) {
-      setIsDone(true);
-    }
+    validateOnSubmit();
   };
-
-  useEffect(() => {
-    if (isSubmit) {
-      setError(validateForm);
-    }
-    // eslint-disable-next-line
-  }, [isSubmit, user]);
 
   return (
     <form onSubmit={handleFormSubmit}>
@@ -47,7 +27,7 @@ export default function MyInputs({ setIsDone }) {
         <Input
           label="first name"
           type="text"
-          value={user.firstName}
+          value={formData.firstName.trim()}
           onChange={handleFormChange}
           name="firstName"
           variant={inputCss.defaultInput}
@@ -56,7 +36,7 @@ export default function MyInputs({ setIsDone }) {
         <Input
           label="first name"
           type="text"
-          value={user.firstName}
+          value={formData.firstName.trim()}
           onChange={handleFormChange}
           name="firstName"
           variant={inputCss.defaultInput}
@@ -68,7 +48,7 @@ export default function MyInputs({ setIsDone }) {
         <Input
           label="last name"
           type="text"
-          value={user.lastName}
+          value={formData.lastName}
           onChange={handleFormChange}
           name="lastName"
           variant={inputCss.defaultInput}
@@ -77,7 +57,7 @@ export default function MyInputs({ setIsDone }) {
         <Input
           label="last name"
           type="text"
-          value={user.lastName}
+          value={formData.lastName}
           onChange={handleFormChange}
           name="lastName"
           variant={inputCss.defaultInput}
@@ -90,7 +70,7 @@ export default function MyInputs({ setIsDone }) {
           label="Email"
           type="text"
           name="email"
-          value={user.email}
+          value={formData.email}
           onChange={handleFormChange}
           variant={inputCss.defaultInput}
         />
@@ -99,7 +79,7 @@ export default function MyInputs({ setIsDone }) {
           label="Email"
           type="text"
           name="email"
-          value={user.email}
+          value={formData.email}
           onChange={handleFormChange}
           variant={inputCss.defaultInput}
           error={inputCss.error}
@@ -111,7 +91,7 @@ export default function MyInputs({ setIsDone }) {
           label="Phone number"
           type="text"
           name="phoneNum"
-          value={user.phoneNum}
+          value={formData.phoneNum}
           onChange={handleFormChange}
           variant={inputCss.defaultInput}
         />
@@ -120,7 +100,7 @@ export default function MyInputs({ setIsDone }) {
           label="Phone number"
           type="text"
           name="phoneNum"
-          value={user.phoneNum}
+          value={formData.phoneNum}
           onChange={handleFormChange}
           variant={inputCss.defaultInput}
           error={inputCss.error}
@@ -131,7 +111,7 @@ export default function MyInputs({ setIsDone }) {
         label="Message"
         type="text"
         name="message"
-        value={user.message}
+        value={formData.message}
         onChange={handleFormChange}
         variant={inputCss.defaultInput}
         someText="some interesting text"
@@ -144,7 +124,7 @@ export default function MyInputs({ setIsDone }) {
           label="Password"
           type="password"
           name="passWord"
-          value={user.passWord}
+          value={formData.passWord}
           onChange={handleFormChange}
           variant={inputCss.defaultInput}
           someText={error.passWord}
@@ -154,7 +134,7 @@ export default function MyInputs({ setIsDone }) {
           label="Password"
           type="password"
           name="passWord"
-          value={user.passWord}
+          value={formData.passWord}
           onChange={handleFormChange}
           variant={inputCss.defaultInput}
           someText={error.passWord}
@@ -162,6 +142,8 @@ export default function MyInputs({ setIsDone }) {
         />
       )}
       <button>Submit</button>
+      {done && <p>Hi {data.firstName}, your details have been Submitted</p>}
+      
     </form>
   );
 }

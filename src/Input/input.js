@@ -12,6 +12,7 @@ export default function Input({
   size,
   multiline,
   row,
+  value,
   ...props
 }) {
   if (multiline) {
@@ -31,7 +32,7 @@ export default function Input({
       <p>{someText}</p>
       <img className={inputCss.startIcon} src={startIcon} alt={startIcon} />
       <img className={inputCss.endIcon} src={endIcon} alt="" />
-      <input name={name} id={name} className={variant} {...props} />
+      <input name={name} id={name} className={variant} value={value.trim()} {...props} />
       <label htmlFor={name}>{label}</label>
     </div>
   );
