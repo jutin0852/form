@@ -81,7 +81,6 @@ export const useValidateForm = (user) => {
           validate(x, errors);
         }
       }
-
       return errors;
     },
     [formData, validate]
@@ -93,14 +92,17 @@ export const useValidateForm = (user) => {
       [e.target.name]: e.target.value,
     });
     setIsDone(false);
-    console.log(error);
   };
 
   const handleblur = (e) => {
-    const key = e.target.name;
-    if (isSubmit === false) {
-      let validateError = handleValidate(e, key);
-      setError(validateError);
+    if (e.relatedTarget && e.relatedTarget.type === "submit") {
+      return;
+    } else {
+      if (isSubmit === false) {
+        const key = e.target.name;
+        let validateError = handleValidate(e, key);
+        setError(validateError);
+      }
     }
   };
 
