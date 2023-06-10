@@ -12,10 +12,16 @@ export default function MyInputs() {
     passWord: "",
   };
 
-  const { error, validateOnSubmit, handleFormChange, formData, done, data } =
-    useValidateForm(user);
+  const {
+    error,
+    validateOnSubmit,
+    handleInputChange,
+    formData,
+    done,
+    data,
+    handleblur,
+  } = useValidateForm(user);
 
-  
   const handleFormSubmit = (e) => {
     e.preventDefault();
     validateOnSubmit();
@@ -26,23 +32,25 @@ export default function MyInputs() {
       <Input
         label="first name"
         type="text"
-        value={formData.firstName.trim()}
-        onChange={handleFormChange}
+        value={formData.firstName}
+        onChange={handleInputChange}
         name="firstName"
         variant={inputCss.defaultInput}
         error={error.firstName && inputCss.error}
         someText={error.firstName && error.firstName}
+        onBlur={handleblur}
       />
 
       <Input
         label="last name"
         type="text"
         value={formData.lastName}
-        onChange={handleFormChange}
+        onChange={handleInputChange}
         name="lastName"
         variant={inputCss.defaultInput}
         error={error.lastName && inputCss.error}
         someText={error.lastName && error.lastName}
+        onBlur={handleblur}
       />
 
       <Input
@@ -50,10 +58,11 @@ export default function MyInputs() {
         type="text"
         name="email"
         value={formData.email}
-        onChange={handleFormChange}
+        onChange={handleInputChange}
         variant={inputCss.defaultInput}
         error={error.email && inputCss.error}
         someText={error.email && error.email}
+        onBlur={handleblur}
       />
 
       <Input
@@ -61,10 +70,11 @@ export default function MyInputs() {
         type="text"
         name="phoneNum"
         value={formData.phoneNum}
-        onChange={handleFormChange}
+        onChange={handleInputChange}
         variant={inputCss.defaultInput}
         error={error.phoneNum && inputCss.error}
         someText={error.phoneNum && error.phoneNum}
+        onBlur={handleblur}
       />
 
       <Input
@@ -72,7 +82,7 @@ export default function MyInputs() {
         type="text"
         name="message"
         value={formData.message}
-        onChange={handleFormChange}
+        onChange={handleInputChange}
         variant={inputCss.defaultInput}
         someText="some interesting text"
         placeholder="send a message"
@@ -85,10 +95,11 @@ export default function MyInputs() {
         type="password"
         name="passWord"
         value={formData.passWord}
-        onChange={handleFormChange}
+        onChange={handleInputChange}
         variant={inputCss.defaultInput}
         someText={error.passWord && error.passWord}
         error={error.passWord && inputCss.error}
+        onBlur={handleblur}
       />
 
       <button>Submit</button>

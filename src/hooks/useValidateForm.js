@@ -8,61 +8,100 @@ export const useValidateForm = (user) => {
   const [done, setIsDone] = useState(false);
   const [data, setData] = useState("");
 
-  const handleValidate = useCallback(() => {
-    let errors = {};
+  const validate = useCallback(
+    (x, errors) => {
+      const emailRegex = /\S+@\S+\.\S+/;
+      const passWordRegex = {
+        containNum: /^(?=.*\d).+$/,
+        containSpecialChar: /^(?=.*[!@#$%^&*(),.?":{}|<>]).+$/,
+      };
 
-    const emailRegex = /\S+@\S+\.\S+/;
-    const passWordRegex = {
-      containNum: /^(?=.*\d).+$/,
-      containSpecialChar: /^(?=.*[!@#$%^&*(),.?":{}|<>]).+$/,
-    };
-    //validation for first name
-    if (!formData.firstName) {
-      errors.firstName = "fill blank field";
-    }
-    //validation for last name
-    if (!formData.lastName) {
-      errors.lastName = "fill blank field";
-    }
-    //validation for email
-    if (!formData.email) {
-      errors.email = "fill blank field";
-    } else if (!emailRegex.test(formData.email)) {
-      errors.email = "Invalid Email";
-    }
-    //validation for phone number
-    if (!formData.phoneNum) {
-      errors.phoneNum = "fill blank field";
-    } else if (isNaN(formData.phoneNum)) {
-      errors.phoneNum = "invalid Number";
-    } else if (formData.phoneNum.length > 14) {
-      errors.phoneNum = "Number greater than 11";
-    }
-    //validation for password
+      //validation for first name
+      if (x === "firstName") {
+        if (!formData[x]) {
+          errors.firstName = "fill blank field";
+        }
+      }
+      // //validation for last name
 
-    if (!formData.passWord) {
-      errors.passWord = "fill blank field";
-    } else if (formData.passWord.length < 8) {
-      errors.passWord = "must be at least 8 characters";
-    } else if (!passWordRegex.containNum.test(formData.passWord)) {
-      errors.passWord = "must contain atleast one number";
-    } else if (!passWordRegex.containSpecialChar.test(formData.passWord)) {
-      errors.passWord = "must contain atleast one special character";
-    }
-    return errors;
-  }, [
-    formData.firstName,
-    formData.email,
-    formData.lastName,
-    formData.phoneNum,
-    formData.passWord,
-  ]);
-  const handleFormChange = (e) => {
+      if (x === "lastName") {
+        if (!formData[x]) {
+          errors.lastName = "fill blank field";
+        }
+      }
+      // //validation for email
+
+      if (x === "email") {
+        if (!formData[x]) {
+          errors.email = "fill blank field";
+        } else if (!emailRegex.test(formData[x])) {
+          errors.email = "Invalid Email";
+        }
+      }
+      // //validation for phone number
+
+      if (x === "phoneNum") {
+        if (!formData[x]) {
+          errors.phoneNum = "fill blank field";
+        } else if (isNaN(formData[x])) {
+          errors.phoneNum = "invalid Number";
+        } else if (formData[x].length > 14) {
+          errors.phoneNum = "Number greater than 11";
+        }
+      }
+      if (x === "passWord") {
+        if (!formData[x]) {
+          errors.passWord = "fill blank field";
+        } else if (formData[x].length < 8) {
+          errors.passWord = "must be at least 8 characters";
+        } else if (!passWordRegex.containNum.test(formData[x])) {
+          errors.passWord = "must contain atleast one number";
+        } else if (!passWordRegex.containSpecialChar.test(formData[x])) {
+          errors.passWord = "must contain atleast one special character";
+        }
+      }
+    },
+    [formData]
+  );
+
+  const handleValidate = useCallback(
+    (e, key) => {
+      let errors = {};
+
+      //validation for when the user leaves an input (onblur)
+
+      for (let x in formData) {
+        if (key) {
+          if (x === key) {
+            validate(x, errors);
+          }
+        }
+        //validation for when the input changes or form is submitted
+        else {
+          validate(x, errors);
+        }
+      }
+
+      return errors;
+    },
+    [formData, validate]
+  );
+
+  const handleInputChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
     setIsDone(false);
+    console.log(error);
+  };
+
+  const handleblur = (e) => {
+    const key = e.target.name;
+    if (isSubmit === false) {
+      let validateError = handleValidate(e, key);
+      setError(validateError);
+    }
   };
 
   const validateOnSubmit = (e) => {
@@ -94,10 +133,11 @@ export const useValidateForm = (user) => {
   return {
     error,
     validateOnSubmit,
-    handleFormChange,
+    handleInputChange,
     formData,
     clearForm,
     done,
     data,
+    handleblur,
   };
 };
